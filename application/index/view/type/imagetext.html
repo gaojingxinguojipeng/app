@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>中国文艺家</title>
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<meta name="author" content="wuyanshi">
+<!-- 页面在客户端不缓存;must-revalidate 是针对某些浏览器通过返回按钮回到上一个标签而不重加载 -->
+<meta http-equiv="Cache-Control" content="must-revalidate,no-cache">
+<!-- 页面刷新 --> 
+<meta http-equiv="refresh" content="321;">
+<!-- 在iPhone的浏览器中页面将以原始大小显示，并不允许用户手动缩放 -->
+<meta name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=no;">
+<meta name="format-detection" content="telephone=no">
+<!-- 默认手机最佳宽度 -->
+<meta name="MobileOptimized" content="321"> 
+<link rel="stylesheet" type="text/css" href="../../style/style.css"/>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+	 <div class="fbtw_top">
+     	 <a href="#">取消</a>
+     	 <a href="#" class="rig">发布</a>
+         <div style="clear:both"></div>
+     </div>
+     <div class="fxxxs">
+     	 <textarea class="fx_nr" placeholder="分享新鲜事"></textarea>
+         <a href="#" class="tjtp"></a>
+         <div class="wdpd_js">
+             {foreach name="type" item="vo"}
+             <a href="javascript:;" class="color">{$vo["type_name"]}</a>
+             {/foreach}
+             <div style="clear:both"></div>
+         </div>
+<!--         <a href="#" class="wztj">添加位置</a>-->
+     </div>
+    <script>
+        $(".color").click(function(){
+            var yRgb ="#fff";
+            var rgb = $(this).css('background-color');
+            if(rgb!=yRgb ){
+                $(this).css('background-color',yRgb );
+            }else{
+                $(this).css('background-color',red);
+            }
+        });
+    </script>
+     <a href="#" class="fbxx">发布</a>
+</div>
+</body>
+</html>

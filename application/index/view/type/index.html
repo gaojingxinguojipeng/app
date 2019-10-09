@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>中国文艺家</title>
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<meta name="author" content="wuyanshi">
+<!-- 页面在客户端不缓存;must-revalidate 是针对某些浏览器通过返回按钮回到上一个标签而不重加载 -->
+<meta http-equiv="Cache-Control" content="must-revalidate,no-cache">
+<!-- 页面刷新 --> 
+<meta http-equiv="refresh" content="321;">
+<!-- 在iPhone的浏览器中页面将以原始大小显示，并不允许用户手动缩放 -->
+<meta name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=no;">
+<meta name="format-detection" content="telephone=no">
+<!-- 默认手机最佳宽度 -->
+<meta name="MobileOptimized" content="321"> 
+<link rel="stylesheet" type="text/css" href="/style/style.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+	 <div class="header">
+     	 <div class="fl_left">
+         	 <input type="submit" class="fl_btn" value="" />
+             <input type="text" placeholder="电影搜索" class="fl_inpu" />
+             <div style="clear:both"></div>
+         </div>
+         <a href="javascript:void(0);" class="xxfb"><img src="/images/xxfb.png" /><p>发 布</p></a>
+         <div style="clear:both"></div>
+         <div class="twfb">
+         	 <span><img src="/images/fbico.png" /></span>
+             <a href="uploadImageText" class="imagetext"><img src="/images/tw.png" />发图文</a>
+             <a href="#"><img src="/images/fbsp.png" />发视频</a>
+             <a href="#"><img src="/images/xz.png" />写文章</a>
+             <a href="#"><img src="/images/kzb.png" />开直播</a>
+             <a href="#"><img src="/images/fbwd.png" />提问</a>
+         </div>
+     </div>
+     <script>
+	 	$(".xxfb").click(function(){
+			$(".twfb").toggle();
+		})
+	 </script>
+     <div class="nav_lin">
+     	 <div class="nav_left">
+             {foreach name="type" item="vo"}
+         	 <a href="javascript:;">{$vo["type_name"]}</a>
+             {/foreach}
+         </div>
+        <a href="javascript:void(0);"  class="nav_rig"><img src="/images/nav.png" /></a>
+         <div style="clear:both"></div>
+     </div>
+     <div class="flnr">
+     	 <a href="javascript:void(0)" class="close"><img src="/images/cha.png" /></a>
+         <div class="wdpd">
+         	 <h2>我的频道 <a href="javascript:;" class="edio">编辑</a></h2>
+             <div class="wdpd_js">
+                 {foreach name="type2" item="vo"}
+                 <a href="javascript:;">{$vo["type_name"]}<span class="xx"  ><img  src="/images/cha2.png" class="xs" value="{$vo['type_id']}" /></span></a>
+                 {/foreach}
+        		 <div style="clear:both"></div>
+             </div>
+         	 <h2>频道推荐</h2>
+             <div class="pdtj">
+                 {foreach name="type" item="vo"}
+                 <a href="javascript:;" class="typw_name" value="{$vo['type_id']}">+{$vo["type_name"]}</a>
+                 {/foreach}
+        		 <div style="clear:both"></div>
+             </div>
+         </div>
+     </div>
+    <script src="/layui/layui.js"></script>
+    <script src="/layui/css/layui.css"></script>
+     
+         <script>
+         layui.use(['layer', 'form'], function() {
+             var layer = layui.layer
+                 , form = layui.form;
+             $(".nav_rig").click(function () {
+                 $(".flnr").show();
+             })
+             $(".nav_rig").click(function () {
+                 $(".xx").hide();
+             })
+             $(".edio").click(function () {
+                 $(".xx").show();
+             })
+             $(".close").click(function () {
+                 $(".flnr").hide();
+             })
+             $(".xs").click(function () {
+                 var _this = $(this).attr("value");
+                 $.ajax({
+                     url: "userType",
+                     type: "post",
+                     data: {type_id: _this},
+                     dataType: "json",
+                     success: function (msg) {
+                         if (msg.code == 1) {
+                             layer.msg(msg.msg);
+                             history.go(0);
+                         }else{
+                             layer.msg(msg.msg);
+                         }
+                     }
+                 })
+             })
+             $(".typw_name").click(function () {
+                 var _this = $(this).attr("value");
+                 $.ajax({
+                     url: "addUsertype",
+                     type: "post",
+                     data: {type_id: _this},
+                     dataType: "json",
+                     success: function (msg) {
+                         if (msg.code == 1) {
+                             layer.msg(msg.msg);
+                             history.go(0);
+                         }else{
+                             layer.msg(msg.msg);
+                         }
+                     }
+                 })
+             })
+
+         })
+		 </script>
+     <div class="hykb">
+     	 <h2>行业口碑动态<a href="#">全部</a></h2>
+         <div class="hykb_bo">
+         	 <div class="wrapper wrapper02" id="retr">
+            <div class="scroller">
+                <ul class="clearfix">
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                             <span><img src="/images/icon_09.png" /></span>
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                             <span><img src="/images/icon_03.png" /></span>
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                             <span><img src="/images/icon_06.png" /></span>
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <li>
+                    	<a href="#" class="img">
+                        	 <img src="/images/mxph.png" />
+                        </a>
+                        <p><a href="#">李现</a></p>
+                    </li>
+                    <div style="clear:both"></div>
+                 </ul>
+             </div>
+             </div>
+         </div>
+     </div>
+        
+<script type="text/javascript" src="/js/flexible.js"></script>
+<script type="text/javascript" src="/js/iscroll.js"></script>
+<script type="text/javascript" src="/js/navbarscroll.js"></script>
+     <script type="text/javascript">
+$(function(){
+
+	//demo示例一到四 通过lass调取，一句可以搞定，用于页面中可能有多个导航的情况
+	$('.wrapper').navbarscroll();
+
+	//demo示例五 通过id调取
+	$('#demo05').navbarscroll({
+		defaultSelect:6,
+		endClickScroll:function(obj){
+			console.log(obj.text())
+		}
+	});
+	
+	//demo示例六 通过id调取
+	$('#demo06').navbarscroll({
+		defaultSelect:3,
+		scrollerWidth:6,
+		fingerClick:1,
+		endClickScroll:function(obj){
+			console.log(obj.text())
+		}
+	});
+});
+</script>
+	<div class="ylvideo">
+    	 <h2><span>最新</span>《速度与激情：特别行动》最佳损友御敌互损两不误</h2>
+         <div class="video">
+         	 <img src="/images/video.png" />
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+         </div>
+    </div>
+    <div class="ylxx">
+    	 <dl>
+         	 <dt>
+             	 <h2><a href="#">周杰伦被曝出售东京房产 面积超千平
+价值1.77亿元</a></h2>
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/ylxx.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    </div>
+    <div class="yqhyy">
+    	 <h2><a href="#">杨千嬅穿亮片连体衣扮复古女郎</a></h2>
+         <ul>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh.png" /></a>
+             </li>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh2.png" /></a>
+             </li>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh3.png" /></a>
+             </li>
+             <div style="clear:both"></div>
+         </ul>
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+    </div>
+    <div class="ylxx">
+    	 <dl>
+         	 <dt>
+             	 <h2><a href="#">《走进你的记忆》定档 赵志伟宋妍霏
+演绎＂甜爽＂爱恋</a></h2>
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/ylxx.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    </div>
+    <div class="ylvideo">
+    	 <h2>张震《宸汐缘》收官 上头演技认证被喊"再演600集"</h2>
+         <div class="video">
+         	 <img src="/images/video.png" />
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+         </div>
+    </div>
+    
+    <div class="yqhyy">
+    	 <h2><a href="#">小沈阳携妻女现身 12岁女儿身高比肩妈妈</a></h2>
+         <ul>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh.png" /></a>
+             </li>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh2.png" /></a>
+             </li>
+         	 <li>
+             	 <a href="#"><img src="/images/yqh3.png" /></a>
+             </li>
+             <div style="clear:both"></div>
+         </ul>
+             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+    </div>
+    <div class="footer">
+    	 <a href="#" class="v1">首页</a>
+    	 <a href="#" class="v2">影视</a>
+    	 <a href="#" class="v3">演员榜</a>
+    	 <a href="#" class="v4">社区</a>
+    	 <a href="#" class="v5">我的</a>
+         <div style="clear:both"></div>
+    </div>
+</div>
+</body>
+</html>

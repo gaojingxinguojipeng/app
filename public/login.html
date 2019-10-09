@@ -47,9 +47,9 @@
              <a href="javascript:;" class="dlbtn">登录</a>
              <div class="xzdsf">
              	 <span>选择第三方登录</span>
-                 <a href="#"><img src="images/wx.png" /></a>
-                 <a href="#"><img src="images/QQ.png" /></a>
-                 <a href="#"><img src="images/wb.png" /></a>
+                 <a href="javascript:;"><img src="images/wx.png" /></a>
+                 <a href="javascript:;"><img src="images/QQ.png" /></a>
+                 <a href="javascript:;"><img src="images/wb.png" /></a>
              </div>
          </div>
     </div>
@@ -88,6 +88,7 @@
                     success: function (msg) {
                         if (msg.code == 0) {
                             layer.msg(msg.msg);
+                            location.href="index.html";
                         } else {
                             layer.msg(msg.msg);
                         }
@@ -100,13 +101,15 @@
                 $.ajax({
                     url: "api/Sms/check",
                     type: "post",
-                    data: {mobile: mobile},
+                    data: {mobile:mobile,captcha:captcha},
                     dataType: "json",
                     success: function (msg) {
                         if (msg.code == 0) {
                             layer.msg(msg.msg);
+                            location.href="index.html";
                         } else {
                             layer.msg(msg.msg);
+                            location.href="index.html";
                         }
                     }
                 })

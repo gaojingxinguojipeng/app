@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\common\controller\Api;
+use think\Db;
 
 /**
  * 首页接口
@@ -20,4 +21,5 @@ class Index extends Api
     {
         $this->success('请求成功');
     }
+
 }
