@@ -27,9 +27,8 @@ class Type extends Model
     protected $append = [
 
     ];
-    
 
-    
+
 
 
 
