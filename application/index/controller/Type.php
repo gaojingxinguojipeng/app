@@ -14,7 +14,7 @@ class Type extends Frontend
     //首页分类展示
     public function type()
     {
-        $data = Db::name('type')->select();
+          $data = Db::name('type')->select();
         $data2 = Db::table('fa_user_type')
             ->join('fa_type', 'fa_user_type.type_id=fa_type.type_id')
             ->field('fa_type.type_name,fa_type.type_id')
@@ -200,34 +200,223 @@ class Type extends Frontend
     }
 
 //首页视频图文文章展示
-  public function myFun($pics){
-//      $new_pics = rtrim($pics,',');
+    public function myFun($pics){
+    //      $new_pics = rtrim($pics,',');
       $arr = explode(',',$pics);
       return $arr;
-  }
+    }
     public function showUpload()
     {
         $data = DB::table("fa_upload")
-            ->order('look desc')
+            ->order(['look'=>'desc'])
             ->limit(10)
             ->select();
-
-
         $brr = [];
-//        $upload_status=$data['upload_status'];
         foreach($data as $key=>$value){
-
-
             $brr[$key]['upload_status'] = $value['upload_status'];
-            $brr[$key]['pics'] = $this->myFun($value['image']);
-
+            $brr[$key]['text'] = $value['text'];
+            $brr[$key]['user_id'] = $value['user_id'];
+            $brr[$key]['image'] = $value['image'];
+            $brr[$key]['look'] = $value['look'];
+            $brr[$key]['images'] = $this->myFun($value['images']);
+            $brr[$key]['count'] = count($this->myFun($value['images']));
         }
-        echo "<pre>";
-        var_dump($brr);
-        echo "</pre>";
-        var_dump($brr);
-//        echo $upload_status;
+       $arr=[
+           'code'=>1,
+           'msg'=>$brr,
+       ];
+        echo json_encode($arr);
+    }
+//    文章详情页
+        public function textDetail()
+    {
 
+        return $this->view->fetch('type/textdetail');
+    }
+//    图文详情页
+    public function imagetextDetail()
+    {
+
+        return $this->view->fetch('type/imagetextdetail');
+    }
+    //图文详情页接口
+    public function showimagetextDetail(){
+        $image=$_POST['image'];
+        $text=$_POST['text'];
+        $user_id=$_POST['user_id'];
+        $upload_status=$_POST['upload_status'];
+        $where=[
+            'user_id'=>$user_id,
+            'text'=>$text,
+            'upload_status'=>$upload_status,
+            'image'=>$image,
+        ];
+        $arr=DB::table("fa_upload")
+            ->where($where)
+            ->find();
+        if($arr){
+            $where=[
+                'upload_id'=>$arr['upload_id']
+            ];
+            $res=DB::table("fa_upload")->where($where)->update(['look'=>$arr['look']+1]);
+        }
+        $arr=[
+            'code'=>1,
+            'msg'=>$arr,
+        ];
+        echo json_encode($arr);
+    }
+    //文章详情页接口
+    public function showtextDetail(){
+        $images=$_POST['images'];
+        $user_id=$_POST['user_id'];
+        $text=$_POST['text'];
+        $upload_status=$_POST['upload_status'];
+        $where=[
+            'user_id'=>$user_id,
+            'text'=>$text,
+            'upload_status'=>$upload_status,
+        ];
+        $arr=DB::table("fa_upload")
+            ->where($where)
+            ->whereOr('images','like',"%{$images}%")
+            ->find();
+        if($arr){
+            $where=[
+                'upload_id'=>$arr['upload_id']
+            ];
+            $res=DB::table("fa_upload")->where($where)->update(['look'=>$arr['look']+1]);
+        }
+        $arr=[
+            'code'=>1,
+            'msg'=>$arr,
+        ];
+        echo json_encode($arr);
+    }
+//    用户发布评论接口
+    public function disscuss(){
+        $upload_id=$_POST['upload_id'];
+        $discuss_content=$_POST['discuss_content'];
+        $add_time=time();
+        $data=[
+            'upload_id'=>$upload_id,
+            'discss_content'=>$discuss_content,
+            'add_time'=>$add_time
+        ];
+        $res=DB::table("fa_discuss")->insert($data);
+        if($res){
+            $this->success(__('评论成功'));
+        }else{
+            $this->error(__('评论失败'));
+        }
+    }
+    //用户评论回复接口
+    public function reply(){
+        $discuss_id=$_POST['discuss_id'];
+        $reply_content=$_POST['replay_content'];
+        $add_time=time();
+        $data=[
+            'discuss_id'=>$discuss_id,
+            'reply_content'=>$reply_content,
+            'add_time'=>$add_time
+        ];
+        $res=DB::table("fa_reply")->insert($data);
+        if($res){
+            $this->success(__('回复评论成功'));
+        }else{
+            $this->error(__('回复评论失败'));
+        }
+    }
+    //详情页面展示一级评论接口
+    public function showDiscuss(){
+        $upload_id=$_POST['upload_id'];
+        $arr=DB::table("fa_discuss")->where(['upload_id'=>$upload_id])->select();
+        $brr = [];
+        foreach($arr as $key=>$value) {
+            $brr[$key]['discuss_id'] = $value['discuss_id'];
+            $brr[$key]['discss_content'] = $value['discss_content'];
+            $brr[$key]['add_time'] = $value['add_time'];
+        }
+        $arr=[
+            'code'=>1,
+            'msg'=>$brr,
+        ];
+        echo json_encode($arr);
+    }
+    //详情页面展示二级评论接口
+    public  function showReply(){
+        $discuss_id=$_POST['discuss_id'];
+        $arr=DB::table("fa_reply")->where(['discuss_id'=>$discuss_id])->select();
+        $brr = [];
+        foreach($arr as $key=>$value){
+            $brr[$key]['replay_content'] = $value['replay_content'];
+            $brr[$key]['add_time'] = $value['add_time'];
+        }
+        $arr=[
+            'code'=>1,
+            'msg'=>$brr,
+        ];
+        echo json_encode($arr);
+    }
+//    搜索热搜页面
+    public function ssrs()
+    {
+        return $this->view->fetch('type/ssrs');
+    }
+    //热点榜页面
+    public function rdb()
+    {
+        return $this->view->fetch('type/rdb');
+    }
+    //热点榜页面数据
+    public function rdbData(){
+        $res=Db::table("fa_upload")->order(['look'=>'desc'])->limit(15)->select();
+        if($res){
+            $arr=[
+                'code'=>1,
+                'msg'=>$res
+            ];
+            echo json_encode($arr);
+        }
+    }
+    //手机验证码登录后进行个人信息完善
+    public  function userInfo(){
+        $image=$_POST['user_image'];
+        $name=$_POST['user_name'];
+        $ID=mt_rand(10000000, 99999999);
+        if(empty($image)||empty($name)){
+            $data=[
+                'user_image'=>"/images/appimg.png",
+                'user_name'=>$ID,
+                'userID'=>$ID
+            ];
+            $res=DB::table("fa_userinfo")->insert($data);
+            if($res){
+
+                $this->success(__('成功'));
+            }else{
+                $this->error(__('失败'));
+            }
+        }else{
+            $data=[
+                'user_image'=>$image,
+                'user_name'=>$name,
+                'userID'=>$ID
+            ];
+            $res=DB::table("fa_userinfo")->insert($data);
+            if($res){
+                $this->success(__('成功'));
+            }else{
+                $this->error(__('失败'));
+            }
+        }
+    }
+//    个人中心用户信息修改
+    public function userinfoUpdate(){
+        
+}
+//    个人中心用户信息修改执行
+    public function userinfoUpdateDo(){
 
     }
 }

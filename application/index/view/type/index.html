@@ -213,78 +213,100 @@ $(function(){
 });
 </script>
 	<div class="ylvideo">
-    	 <h2><span>最新</span>《速度与激情：特别行动》最佳损友御敌互损两不误</h2>
-         <div class="video">
-         	 <img src="/images/video.png" />
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
-         </div>
     </div>
     <div class="ylxx">
-    	 <dl>
-         	 <dt>
-             	 <h2><a href="#">周杰伦被曝出售东京房产 面积超千平
-价值1.77亿元</a></h2>
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
-             </dt>
-             <dd>
-             	 <a href="#"><img src="/images/ylxx.png" /></a>
-             </dd>
-             <div style="clear:both"></div>
-         </dl>
+
     </div>
     <div class="yqhyy">
-    	 <h2><a href="#">杨千嬅穿亮片连体衣扮复古女郎</a></h2>
-         <ul>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh.png" /></a>
-             </li>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh2.png" /></a>
-             </li>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh3.png" /></a>
-             </li>
-             <div style="clear:both"></div>
-         </ul>
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+
     </div>
-    <div class="ylxx">
-    	 <dl>
-         	 <dt>
-             	 <h2><a href="#">《走进你的记忆》定档 赵志伟宋妍霏
-演绎＂甜爽＂爱恋</a></h2>
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
-             </dt>
-             <dd>
-             	 <a href="#"><img src="/images/ylxx.png" /></a>
-             </dd>
-             <div style="clear:both"></div>
-         </dl>
-    </div>
-    <div class="ylvideo">
-    	 <h2>张震《宸汐缘》收官 上头演技认证被喊"再演600集"</h2>
-         <div class="video">
-         	 <img src="/images/video.png" />
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
-         </div>
-    </div>
-    
-    <div class="yqhyy">
-    	 <h2><a href="#">小沈阳携妻女现身 12岁女儿身高比肩妈妈</a></h2>
-         <ul>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh.png" /></a>
-             </li>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh2.png" /></a>
-             </li>
-         	 <li>
-             	 <a href="#"><img src="/images/yqh3.png" /></a>
-             </li>
-             <div style="clear:both"></div>
-         </ul>
-             <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
-    </div>
+
+    <script>
+        layui.use(['layer', 'form'], function() {
+                var layer = layui.layer
+                    , form = layui.form;
+            $(document).ready(function(){
+                $.ajax({
+                    url: "showUpload",
+                    type: "post",
+                    data: {},
+                    dataType: "json",
+                    success: function (msg) {
+                          if(msg.code==1){
+                              $.each(msg.msg,function(i,v){
+                                  var html='';
+                                  var htmls='';
+                                  var htmlss='';
+                                  var images_value = v.images;
+                                  if(v.upload_status==1){
+                                      html+=    "<h2>"
+                                      html+=    "<a href='javascript:;'>"+v.text+"</a>"
+                                      html+=    "</h2>"
+                                      html+=    "<ul>"
+                                      for(var i=0;i<=v.count-1;i++){
+                                           html+= "<li>"
+                                           html+= "<a href='javascript:;' ><img src='/uploads/"+images_value[i]+"' class='aaa' upload_status='"+v.upload_status+"' text='"+v.text+"'   value='"+images_value[i]+"'  user_id='"+v.user_id+"'/>"
+                                           html+= "</a>"
+                                           html+=  "</li>"
+                                      }
+                                      html+= "<div style='clear:both'></div>"
+                                      html+= "</ul>"
+                                      html+= "<p>兄弟娱乐 "+v.look+"浏览"
+                                      html+= "<a href=''>368评论</a>"
+                                      html+= "</p>";
+                                  }
+                                  $('.yqhyy').append(html);
+                                  if(v.upload_status==2){
+                                      htmls+="<dl>"
+                                      htmls+="<dt>"
+                                      htmls+="<h2><a href=''>"+v.text+"</a></h2>"
+                                      htmls+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+                                      htmls+="</dt>"
+                                      htmls+="<dd>"
+                                      htmls+="<a href=''><img src='/uploads/"+v.image+"' /></a>"
+                                      htmls+="</dd>"
+                                      htmls+="<div style='clear:both'></div>"
+                                      htmls+="</dl>"
+                                  }
+                                  $('.ylxx').append(htmls);
+                                  if(v.upload_status==3){
+                                      htmlss+="<h2><span>最新</span>"+v.text+"</h2>"
+                                      htmlss+="<div class='video'>"
+                                      htmlss+="<img src='/images/video.png' />"
+                                      htmlss+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+                                      htmlss+="</div>"
+                                  }
+                                  $('.ylvideo').append(htmlss);
+                              });
+                          }
+                    }
+                })
+            })
+
+            $(document).on('click','.aaa',function() {
+                var images=$(this).attr("value");
+                var user_id=$(this).attr("user_id");
+                var upload_status=$(this).attr("upload_status");
+                var text=$(this).attr("text");
+                $.ajax({
+                    url: "showtextDetail",
+                    type: "post",
+                    data: {images: images,upload_status: upload_status,text: text,user_id:user_id},
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.code == 1) {
+                            layer.msg(msg.msg);
+                        }else{
+                            layer.msg(msg.msg);
+                        }
+                    }
+                })
+            });
+
+
+        })
+    </script>
+
     <div class="footer">
     	 <a href="#" class="v1">首页</a>
     	 <a href="#" class="v2">影视</a>

@@ -2,7 +2,10 @@
 
 namespace app\common\library;
 
+use app\admin\model\SmsLog;
+use think\Exception;
 use think\Hook;
+use app\common\library\Alimsg;
 
 /**
  * 短信验证码类
@@ -14,7 +17,7 @@ class Sms
      * 验证码有效时长
      * @var int
      */
-    protected static $expire = 120;
+    protected static $expire = 60;
 
     /**
      * 最大允许检测的次数
@@ -53,12 +56,21 @@ class Sms
         $time = time();
         $ip = request()->ip();
         $sms = \app\common\model\Sms::create(['event' => $event, 'mobile' => $mobile, 'code' => $code, 'ip' => $ip, 'createtime' => $time]);
-        $result = Hook::listen('sms_send', $sms, null, true);
-        if (!$result) {
+//        $result = Hook::listen('sms_send', $sms, null, true);
+        $alimsg = new Alimsg();
+//        return true;
+        $result = $alimsg->sendSms($mobile,$code);
+        if (isset($result['Code']) && $result['Code'] == 'OK') {
+            return true;
+        }else{
             $sms->delete();
+            $smsLog = new SmsLog();
+            $smsLog->code = $code;
+            $smsLog->mobile = $mobile;
+            $smsLog->result = json_encode($result);
+            $smsLog->save();
             return false;
         }
-        return true;
     }
 
     /**
@@ -102,8 +114,9 @@ class Sms
                     $sms->save();
                     return false;
                 } else {
-                    $result = Hook::listen('sms_check', $sms, null, true);
-                    return $result;
+//                    $result = Hook::listen('sms_check', $sms, null, true);
+//                    return $result;
+                    return true;
                 }
             } else {
                 // 过期则清空该手机验证码

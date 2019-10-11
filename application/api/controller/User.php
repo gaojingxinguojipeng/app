@@ -4,7 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Api;
 use app\common\library\Ems;
-use app\common\library\Sms;
+use app\common\library\Smsaaa;
 use fast\Random;
 use think\Validate;
 
@@ -67,7 +67,7 @@ class User extends Api
         if (!Validate::regex($mobile, "^1\d{10}$")) {
             $this->error(__('Mobile is incorrect'));
         }
-        if (!Sms::check($mobile, $captcha, 'mobilelogin')) {
+        if (!Smsaaa::check($mobile, $captcha, 'mobilelogin')) {
             $this->error(__('Captcha is incorrect'));
         }
         $user = \app\common\model\User::getByMobile($mobile);
@@ -81,7 +81,7 @@ class User extends Api
             $ret = $this->auth->register($mobile, Random::alnum(), '', $mobile, []);
         }
         if ($ret) {
-            Sms::flush($mobile, 'mobilelogin');
+            Smsaaa::flush($mobile, 'mobilelogin');
             $data = ['userinfo' => $this->auth->getUserinfo()];
             $this->success(__('Logged in successful'), $data);
         } else {
@@ -213,7 +213,7 @@ class User extends Api
         if (\app\common\model\User::where('mobile', $mobile)->where('id', '<>', $user->id)->find()) {
             $this->error(__('Mobile already exists'));
         }
-        $result = Sms::check($mobile, $captcha, 'changemobile');
+        $result = Smsaaa::check($mobile, $captcha, 'changemobile');
         if (!$result) {
             $this->error(__('Captcha is incorrect'));
         }
@@ -223,7 +223,7 @@ class User extends Api
         $user->mobile = $mobile;
         $user->save();
 
-        Sms::flush($mobile, 'changemobile');
+        Smsaaa::flush($mobile, 'changemobile');
         $this->success();
     }
 
@@ -283,11 +283,11 @@ class User extends Api
             if (!$user) {
                 $this->error(__('User not found'));
             }
-            $ret = Sms::check($mobile, $captcha, 'resetpwd');
+            $ret = Smsaaa::check($mobile, $captcha, 'resetpwd');
             if (!$ret) {
                 $this->error(__('Captcha is incorrect'));
             }
-            Sms::flush($mobile, 'resetpwd');
+            Smsaaa::flush($mobile, 'resetpwd');
         } else {
             if (!Validate::is($email, "email")) {
                 $this->error(__('Email is incorrect'));

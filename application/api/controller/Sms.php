@@ -3,7 +3,7 @@
 namespace app\api\controller;
 
 use app\common\controller\Api;
-use app\common\library\Sms as Smslib;
+use app\common\library\Smsaaa as Smslib;
 use app\common\model\User;
 use think\Db;
 
@@ -52,6 +52,7 @@ class Sms extends Api
             }
         }
         $ret = Smslib::send($mobile, null, $event);
+//        var_dump($ret);die;
         if ($ret) {
             $this->success(__('发送成功'));
         } else {

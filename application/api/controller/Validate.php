@@ -112,7 +112,7 @@ class Validate extends Api
         $mobile = $this->request->request('mobile');
         $captcha = $this->request->request('captcha');
         $event = $this->request->request('event');
-        if (!\app\common\library\Sms::check($mobile, $captcha, $event)) {
+        if (!\app\common\library\Smsaaa::check($mobile, $captcha, $event)) {
             $this->error(__('验证码不正确'));
         }
         $this->success();
