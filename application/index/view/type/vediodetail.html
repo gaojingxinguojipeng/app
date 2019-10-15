@@ -20,31 +20,79 @@
 
 <body>
 <div class="container" style="padding:0px;">
-	 <div class="wzfb_top">
-     	  <a href="#" class="wzfh"><img src="/images/fh2.png" /></a>图文详情页
-     </div>
-  <div class="main">
+	 <div class="rd_ban">
 
-    <div class="xq_tit">{$arr.text}</div>
-    <div class="xq_yljs">
-     	 <dl>
+
+
+         <video src="{$arr.file}" controls='controls' class='video'></video>
+
+
+         <div class="rd_btop">
+         	 <a href="#"><img src="/images/fhbs.png" /></a>
+             <div style="clear:both"></div>
+         </div>
+    </div>  
+    <div class="spbf_top">
+    	 <dl>
          	 <dt><img src="{$res.user_image}" /></dt>
              <dd>
-             	<h2>{$res.user_name}</h2>
-                <p>{$res.user_fans}粉丝</p>
+             	 <h2>{$res.user_name}</h2>
+                 <p>{$res.user_fans}粉丝</p>
              </dd>
+             <a href="#" class="gz">关注</a>
+             <div style="clear:both"></div>
          </dl>
-         <a href="http://fast.work.com/index/type/fans?user_id={$res.user_id}" class="gz">关注</a>
-         <div style="clear:both"></div>
-     </div>
-     <div class="xq_nrjs">
-         {foreach name="arr.new_image" item="vo"}
-              <p><img src="/uploads/{$vo}" /></p>
-         {/foreach}
-          <span class="sl">{$arr.look}万阅读</span>
+         <h2 class="tit">中国强劲消费力让美零售巨头惊掉下巴</h2>
+         <p class="bf">原创 |<span>88万播放</span></p>
+         <div class="js">
+         	 <a href="#"><img src="/images/zf.png" />98</a>
+         	 <a href="#"><img src="/images/pl.png" />98</a>
+         	 <a href="#"><img src="/images/zan.png" />98</a>
+         </div>
     </div>
-  </div>
-  <div class="xqpj">
+    <div class="spfb_cen">
+    	 <dl>	
+         	 <dt>
+             	<h2><a href="#">中国内地男演员 2003年，参演高希希执导的电视剧《历史的天空》反一号</a></h2>
+                <p>海卓资讯   88万次播放</p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/spbf.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    	 <dl>	
+         	 <dt>
+             	<h2><a href="#">中国内地男演员 2003年，参演高希希执导的电视剧《历史的天空》反一号</a></h2>
+                <p>海卓资讯   88万次播放</p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/spbf.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    	 <dl>	
+         	 <dt>
+             	<h2><a href="#">中国内地男演员 2003年，参演高希希执导的电视剧《历史的天空》反一号</a></h2>
+                <p>海卓资讯   88万次播放</p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/spbf.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    	 <dl>	
+         	 <dt>
+             	<h2><a href="#">中国内地男演员 2003年，参演高希希执导的电视剧《历史的天空》反一号</a></h2>
+                <p>海卓资讯   88万次播放</p>
+             </dt>
+             <dd>
+             	 <a href="#"><img src="/images/spbf.png" /></a>
+             </dd>
+             <div style="clear:both"></div>
+         </dl>
+    </div>
+    <div class="xqpj">
   	 <dl>
      	 <dt>
          	 <a href="#"><img src="/images/tx.png" /></a>
@@ -81,5 +129,3 @@
 </div>
 </body>
 </html>
-<script src="/layui/layui.js"></script>
-<script src="/layui/css/layui.css"></script>

@@ -14,7 +14,7 @@
 <meta name="format-detection" content="telephone=no">
 <!-- 默认手机最佳宽度 -->
 <meta name="MobileOptimized" content="321"> 
-<link rel="stylesheet" type="text/css" href="style/style.css"/>  
+<link rel="stylesheet" type="text/css" href="/style/style.css"/>
 </head>
 
 <body>
@@ -47,18 +47,18 @@
              <a href="javascript:;" class="dlbtn">登录</a>
              <div class="xzdsf">
              	 <span>选择第三方登录</span>
-                 <a href="javascript:;"><img src="images/wx.png" /></a>
-                 <a href="javascript:;"><img src="images/QQ.png" /></a>
-                 <a href="javascript:;"><img src="images/wb.png" /></a>
+                 <a href="javascript:;"><img src="/images/wx.png" /></a>
+                 <a href="javascript:;"><img src="/images/QQ.png" /></a>
+                 <a href="javascript:;"><img src="/images/wb.png" /></a>
              </div>
          </div>
     </div>
 </body>
 </html>
-<script src="layui/layui.js"></script>
-<script src="layui/css/layui.css"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.flexslider-min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/layui/css/layui.css"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.flexslider-min.js"></script>
 <script>
     $(function() {
         layui.use(['layer', 'form'], function(){
@@ -81,7 +81,7 @@
                 }
                 var mobile = $('.dl_input').eq(0).val();
                 $.ajax({
-                    url: "api/Sms/send",
+                    url: "http://fast.work.com/api/Sms/send",
                     type: "post",
                     data: {mobile: mobile},
                     dataType: "json",
@@ -99,17 +99,17 @@
                 var mobile = $('.dl_input').eq(0).val();
                 var captcha = $('.dl_input').eq(1).val();
                 $.ajax({
-                    url: "api/Sms/check",
+                    url: "http://fast.work.com/api/Sms/check",
                     type: "post",
                     data: {mobile:mobile,captcha:captcha},
                     dataType: "json",
                     success: function (msg) {
-                        if (msg.code == 0) {
+                        if (msg.code == 1) {
+                            alert(111);
                             layer.msg(msg.msg);
-                            // location.href="index.html";
+                            location.href="http://fast.work.com/index/type/type";
                         } else {
                             layer.msg(msg.msg);
-                            // location.href="index.html";
                         }
                     }
                 })

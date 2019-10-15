@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>中国文艺家</title>
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<meta name="author" content="wuyanshi">
+<!-- 页面在客户端不缓存;must-revalidate 是针对某些浏览器通过返回按钮回到上一个标签而不重加载 -->
+<meta http-equiv="Cache-Control" content="must-revalidate,no-cache">
+<!-- 页面刷新 --> 
+<meta http-equiv="refresh" content="321;">
+<!-- 在iPhone的浏览器中页面将以原始大小显示，并不允许用户手动缩放 -->
+<meta name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=no;">
+<meta name="format-detection" content="telephone=no">
+<!-- 默认手机最佳宽度 -->
+<meta name="MobileOptimized" content="321"> 
+<link rel="stylesheet" type="text/css" href="/style/style.css"/>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+
+</head>
+
+<body>
+<div class="container" style="padding:0px;">
+	 <div class="header">
+     	 <div class="fl_left">
+         	 <input type="submit" class="fl_btn" value="" />
+             <input type="text" placeholder="电影搜索" class="fl_inpu" />
+             <div style="clear:both"></div>
+         </div>
+         <a href="javascript:void(0);" class="xxfb"><img src="/images/xxfb.png" /><p>发 布</p></a>
+         <div style="clear:both"></div>
+         <div class="twfb">
+         	 <span><img src="/images/fbico.png" /></span>
+             <a href="#"><img src="/images/tw.png" />发图文</a>
+             <a href="#"><img src="/images/fbsp.png" />发视频</a>
+             <a href="#"><img src="/images/xz.png" />写文章</a>
+             <a href="#"><img src="/images/kzb.png" />开直播</a>
+             <a href="#"><img src="/images/fbwd.png" />提问</a>
+         </div>
+     </div>
+     <script>
+	 	$(".xxfb").click(function(){
+			$(".twfb").toggle();
+		})
+	 </script>
+     <div class="nav_lin">
+     	 <div class="nav_left">
+         	 <a href="#">关注</a>
+         	 <a href="#" class="slt">推荐</a>
+         	 <a href="#">直播</a>
+         	 <a href="#">影视</a>
+         	 <a href="#">新时代</a>
+         	 <a href="#">问答</a>
+         </div>
+        <a href="javascript:void(0);"  class="nav_rig"><img src="/images/nav.png" /></a>
+         <div style="clear:both"></div>
+     </div>
+     <div class="dsp">
+
+     </div>
+     <div class="footer">
+    	 <a href="#" class="v1">首页</a>
+    	 <a href="#" class="v2">影视</a>
+    	 <a href="#" class="v3">演员榜</a>
+    	 <a href="#" class="v4">社区</a>
+    	 <a href="#" class="v5">我的</a>
+         <div style="clear:both"></div>
+    </div>
+</div>
+</body>
+</html>
+<script  src="/layui/layui.js"></script>
+<script src="/layui/css/layui.css"></script>
+<script>
+layui.use(['layer', 'form'], function() {
+    var layer = layui.layer
+        , form = layui.form;
+    $(document).ready(function() {
+        $.ajax({
+            url: "showVedio",
+            type: "post",
+            data: {},
+            dataType: "json",
+            success: function (msg) {
+                if(msg.code==1){
+                    $.each(msg.msg,function(i,v){
+                        var html='';
+                        html+="<dl>"
+                        html+="<dt>"
+                        html+="<a href=''><video src='"+v.file+"' controls='controls' class='video'></video></a>"
+                        html+="<h2>"+v.text+"</h2>"
+                        html+="<p>播放"+v.look+"次<span></span></p>"
+                        html+="</dt>"
+                        html+="<dd>"
+                        html+="<img src='/images/dsp2.jpg' /><span>抽烟的女人</span> <a href='' class='gz'>关注</a>"
+                        html+="<a href='' class='fx'><img src='/images/dspfx.png'/></a>"
+                        html+="<a href='' class='pj'>592</a>"
+                        html+="</dd>"
+                        html+="<div style='clear:both'></div>"
+                        html+="</dl>";
+                        $('.dsp').append(html);
+                    })
+
+                }
+            }
+        })
+    })
+})
+</script>

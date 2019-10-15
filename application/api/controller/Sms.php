@@ -52,7 +52,6 @@ class Sms extends Api
             }
         }
         $ret = Smslib::send($mobile, null, $event);
-//        var_dump($ret);die;
         if ($ret) {
             $this->success(__('发送成功'));
         } else {
@@ -79,6 +78,7 @@ class Sms extends Api
         }
         if ($event) {
             $userinfo = User::getByMobile($mobile);
+
             if ($event == 'register' && $userinfo) {
                 //已被注册
                 $this->error(__('已被注册'));
@@ -91,10 +91,29 @@ class Sms extends Api
             }
         }
         $ret = Smslib::check($mobile, $captcha, $event);
+
         if ($ret) {
-            $this->success(__('成功'));
+            $userinfo=DB::table("fa_userinfo")->where(["user_mobile"=>$mobile])->find();
+            if($userinfo['user_mobile']){
+                $user_id=$userinfo['user_id'];
+                $user_id=session('user_id',$user_id);
+                $mobile=session('user_mobile',$mobile);
+                $arr=[
+                    'code'=>1,
+                    'msg'=>"登录成功"
+                ];
+                return $arr;
+            }else{
+                $arr=DB::table("fa_userinfo")->insert(['user_mobile'=>$mobile]);
+                $user_id=$userinfo['user_id'];
+                $user_id=session(['user_id'=>$user_id,'user_mobile'=>$mobile]);
+            }
         } else {
-            $this->error(__('验证码不正确'));
+            $arr=[
+                'code'=>2,
+                'msg'=>"验证码不正确"
+            ];
+            return $arr;
         }
     }
 }

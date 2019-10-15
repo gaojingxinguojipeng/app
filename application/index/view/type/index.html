@@ -45,7 +45,7 @@
      <div class="nav_lin">
      	 <div class="nav_left">
              {foreach name="type" item="vo"}
-         	 <a href="javascript:;">{$vo["type_name"]}</a>
+         	 <a href="http://fast.work.com/index/type/type?type_id={$vo['type_id']}" value="{$vo['type_id']}">{$vo["type_name"]}</a>
              {/foreach}
          </div>
         <a href="javascript:void(0);"  class="nav_rig"><img src="/images/nav.png" /></a>
@@ -106,6 +106,7 @@
                      }
                  })
              })
+
              $(".typw_name").click(function () {
                  var _this = $(this).attr("value");
                  $.ajax({
@@ -212,104 +213,199 @@ $(function(){
 	});
 });
 </script>
-	<div class="ylvideo">
+    {foreach name="brr" item="vo"}
+    <?php if($vo['upload_status']==3): ?>
+    <div class="ylvideo">
+        <h2><span>最新</span>{$vo["text"]}</h2>
+        <div class="video">
+            <a href="http://fast.work.com/index/type/vedioDetail?upload_id={$vo['upload_id']}"><video src="{$vo['file']}" controls='controls' class='video'></video></a>
+            <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+        </div>
     </div>
+    <?php elseif($vo['upload_status']==2): ?>
     <div class="ylxx">
-
+        <dl>
+            <dt>
+                <h2><a href="#">{$vo["text"]}</a></h2>
+                <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
+            </dt>
+            <dd>
+                <a href="http://fast.work.com/index/type/textDetail?upload_id={$vo['upload_id']}"><img src="/uploads/{$vo['image']}" /></a>
+            </dd>
+            <div style="clear:both"></div>
+        </dl>
     </div>
+    <?php else: ?>
     <div class="yqhyy">
-
+    <h2><a href="#">{$vo["text"]}</a></h2>
+    <ul>
+        {foreach name="vo.images" item="voo"}
+        <li>
+            <a href="http://fast.work.com/index/type/imagetextDetail?upload_id={$vo['upload_id']}"><img src="/uploads/{$voo}" /></a>
+        </li>
+        {/foreach}
+        <div style="clear:both"></div>
+    </ul>
+    <p>兄弟娱乐 1768浏览<a href="#">368评论</a></p>
     </div>
+    <?php endif; ?>
+    {/foreach}
+
+<!--	<div class="ylvideo">-->
+<!--    </div>-->
+<!--    <div class="ylxx">-->
+
+<!--    </div>-->
+<!--    <div class="yqhyy">-->
+
+<!--    </div>-->
 
     <script>
-        layui.use(['layer', 'form'], function() {
-                var layer = layui.layer
-                    , form = layui.form;
-            $(document).ready(function(){
-                $.ajax({
-                    url: "showUpload",
-                    type: "post",
-                    data: {},
-                    dataType: "json",
-                    success: function (msg) {
-                          if(msg.code==1){
-                              $.each(msg.msg,function(i,v){
-                                  var html='';
-                                  var htmls='';
-                                  var htmlss='';
-                                  var images_value = v.images;
-                                  if(v.upload_status==1){
-                                      html+=    "<h2>"
-                                      html+=    "<a href='javascript:;'>"+v.text+"</a>"
-                                      html+=    "</h2>"
-                                      html+=    "<ul>"
-                                      for(var i=0;i<=v.count-1;i++){
-                                           html+= "<li>"
-                                           html+= "<a href='javascript:;' ><img src='/uploads/"+images_value[i]+"' class='aaa' upload_status='"+v.upload_status+"' text='"+v.text+"'   value='"+images_value[i]+"'  user_id='"+v.user_id+"'/>"
-                                           html+= "</a>"
-                                           html+=  "</li>"
-                                      }
-                                      html+= "<div style='clear:both'></div>"
-                                      html+= "</ul>"
-                                      html+= "<p>兄弟娱乐 "+v.look+"浏览"
-                                      html+= "<a href=''>368评论</a>"
-                                      html+= "</p>";
-                                  }
-                                  $('.yqhyy').append(html);
-                                  if(v.upload_status==2){
-                                      htmls+="<dl>"
-                                      htmls+="<dt>"
-                                      htmls+="<h2><a href=''>"+v.text+"</a></h2>"
-                                      htmls+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
-                                      htmls+="</dt>"
-                                      htmls+="<dd>"
-                                      htmls+="<a href=''><img src='/uploads/"+v.image+"' /></a>"
-                                      htmls+="</dd>"
-                                      htmls+="<div style='clear:both'></div>"
-                                      htmls+="</dl>"
-                                  }
-                                  $('.ylxx').append(htmls);
-                                  if(v.upload_status==3){
-                                      htmlss+="<h2><span>最新</span>"+v.text+"</h2>"
-                                      htmlss+="<div class='video'>"
-                                      htmlss+="<img src='/images/video.png' />"
-                                      htmlss+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
-                                      htmlss+="</div>"
-                                  }
-                                  $('.ylvideo').append(htmlss);
-                              });
-                          }
-                    }
-                })
-            })
 
-            $(document).on('click','.aaa',function() {
-                var images=$(this).attr("value");
-                var user_id=$(this).attr("user_id");
-                var upload_status=$(this).attr("upload_status");
-                var text=$(this).attr("text");
-                $.ajax({
-                    url: "showtextDetail",
-                    type: "post",
-                    data: {images: images,upload_status: upload_status,text: text,user_id:user_id},
-                    dataType: "json",
-                    success: function (msg) {
-                        if (msg.code == 1) {
-                            layer.msg(msg.msg);
-                        }else{
-                            layer.msg(msg.msg);
-                        }
-                    }
-                })
-            });
-
-
-        })
+        // layui.use(['layer', 'form'], function() {
+        //         var layer = layui.layer
+        //             , form = layui.form;
+        //     $(".typechange").click(function () {
+        //         var _this = $(this).attr("value");
+        //         $.ajax({
+        //             url: "showUpload",
+        //             type: "post",
+        //             data: {type_id: _this},
+        //             dataType: "json",
+        //             success: function (msg) {
+        //                 if(msg.code==1){
+        //                     $.each(msg.msg,function(i,v){
+        //                         var html='';
+        //                         var htmls='';
+        //                         var htmlss='';
+        //                         var images_value = v.images;
+        //                         if(v.upload_status==1){
+        //                             html+=    "<h2>"
+        //                             html+=    "<a href='javascript:;'>"+v.text+"</a>"
+        //                             html+=    "</h2>"
+        //                             html+=    "<ul>"
+        //                             for(var i=0;i<=v.count-1;i++){
+        //                                 html+= "<li>"
+        //                                 html+= "<a href='http://fast.work.com/index/type/imagetextDetail?upload_id="+v.upload_id+"''><img src='/uploads/"+images_value[i]+"' class='aaa' upload_status='"+v.upload_status+"' text='"+v.text+"'   value='"+images_value[i]+"'  user_id='"+v.user_id+"'/>"
+        //                                 html+= "</a>"
+        //                                 html+= "</li>"
+        //                             }
+        //                             html+= "<div style='clear:both'></div>"
+        //                             html+= "</ul>"
+        //                             html+= "<p>兄弟娱乐 "+v.look+"浏览"
+        //                             html+= "<a href=''>368评论</a>"
+        //                             html+= "</p>";
+        //                         }
+        //                         $('.yqhyy').append(html);
+        //                         if(v.upload_status==2){
+        //                             htmls+="<dl>"
+        //                             htmls+="<dt>"
+        //                             htmls+="<h2><a href=''>"+v.text+"</a></h2>"
+        //                             htmls+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+        //                             htmls+="</dt>"
+        //                             htmls+="<dd>"
+        //                             htmls+="<a href='http://fast.work.com/index/type/textDetail?upload_id="+v.upload_id+"'><img src='/uploads/"+v.image+"' /></a>"
+        //                             htmls+="</dd>"
+        //                             htmls+="<div style='clear:both'></div>"
+        //                             htmls+="</dl>"
+        //                         }
+        //                         $('.ylxx').append(htmls);
+        //                         if(v.upload_status==3){
+        //                             htmlss+="<h2><span>最新</span>"+v.text+"</h2>"
+        //                             htmlss+="<div class='video'>"
+        //                             htmlss+="<video src='"+v.file+"' controls='controls' class='video'></video>"
+        //                             htmlss+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+        //                             htmlss+="</div>"
+        //                         }
+        //                         $('.ylvideo').append(htmlss);
+        //                     });
+        //                 }
+        //             }
+        //         })
+        //     })
+        //     $(document).ready(function(){
+        //         $.ajax({
+        //             url: "showUpload",
+        //             type: "post",
+        //             data: {},
+        //             dataType: "json",
+        //             success: function (msg) {
+        //                   if(msg.code==1){
+        //                       $.each(msg.msg,function(i,v){
+        //                           var html='';
+        //                           var htmls='';
+        //                           var htmlss='';
+        //                           var images_value = v.images;
+        //                           if(v.upload_status==1){
+        //                               html+=    "<h2>"
+        //                               html+=    "<a href='javascript:;'>"+v.text+"</a>"
+        //                               html+=    "</h2>"
+        //                               html+=    "<ul>"
+        //                               for(var i=0;i<=v.count-1;i++){
+        //                                    html+= "<li>"
+        //                                    html+= "<a href='http://fast.work.com/index/type/imagetextDetail?upload_id="+v.upload_id+"''><img src='/uploads/"+images_value[i]+"' class='aaa' upload_status='"+v.upload_status+"' text='"+v.text+"'   value='"+images_value[i]+"'  user_id='"+v.user_id+"'/>"
+        //                                    html+= "</a>"
+        //                                    html+= "</li>"
+        //                               }
+        //                               html+= "<div style='clear:both'></div>"
+        //                               html+= "</ul>"
+        //                               html+= "<p>兄弟娱乐 "+v.look+"浏览"
+        //                               html+= "<a href=''>368评论</a>"
+        //                               html+= "</p>";
+        //                           }
+        //                           $('.yqhyy').append(html);
+        //                           if(v.upload_status==2){
+        //                               htmls+="<dl>"
+        //                               htmls+="<dt>"
+        //                               htmls+="<h2><a href=''>"+v.text+"</a></h2>"
+        //                               htmls+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+        //                               htmls+="</dt>"
+        //                               htmls+="<dd>"
+        //                               htmls+="<a href='http://fast.work.com/index/type/textDetail?upload_id="+v.upload_id+"'><img src='/uploads/"+v.image+"' /></a>"
+        //                               htmls+="</dd>"
+        //                               htmls+="<div style='clear:both'></div>"
+        //                               htmls+="</dl>"
+        //                           }
+        //                           $('.ylxx').append(htmls);
+        //                           if(v.upload_status==3){
+        //                               htmlss+="<h2><span>最新</span>"+v.text+"</h2>"
+        //                               htmlss+="<div class='video'>"
+        //                               htmlss+="<video src='"+v.file+"' controls='controls' class='video'></video>"
+        //                               htmlss+="<p>兄弟娱乐 "+v.look+"浏览<a href=''>368评论</a></p>"
+        //                               htmlss+="</div>"
+        //                           }
+        //                           $('.ylvideo').append(htmlss);
+        //                       });
+        //                   }
+        //             }
+        //         })
+        //     })
+        //
+        //     $(document).on('click','.aaa',function() {
+        //         var images=$(this).attr("value");
+        //         var user_id=$(this).attr("user_id");
+        //         var upload_status=$(this).attr("upload_status");
+        //         var text=$(this).attr("text");
+        //         $.ajax({
+        //             url: "showtextDetail",
+        //             type: "post",
+        //             data: {images: images,upload_status: upload_status,text: text,user_id:user_id},
+        //             dataType: "json",
+        //             success: function (msg) {
+        //                 if (msg.code == 1) {
+        //                     layer.msg(msg.msg);
+        //                 }else{
+        //                     layer.msg(msg.msg);
+        //                 }
+        //             }
+        //         })
+        //     });
+        // })
     </script>
 
     <div class="footer">
-    	 <a href="#" class="v1">首页</a>
-    	 <a href="#" class="v2">影视</a>
+    	 <a href="http://fast.work.com/index/type/type" class="v1">首页</a>
+    	 <a href="http://fast.work.com/index/type/dsp" class="v2">影视</a>
     	 <a href="#" class="v3">演员榜</a>
     	 <a href="#" class="v4">社区</a>
     	 <a href="#" class="v5">我的</a>

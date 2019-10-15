@@ -14,6 +14,32 @@ class Type extends Frontend
     //首页分类展示
     public function type()
     {
+        if(!empty($_GET['type_id'])){
+            $type_id=$_GET['type_id'];
+            $data = DB::table("fa_upload")
+                ->where(['type_id'=>$type_id])
+                ->select();
+        }else{
+            $data = DB::table("fa_upload")
+                ->order(['look'=>'desc'])
+                ->limit(4)
+                ->select();
+        }
+        $brr = [];
+        foreach($data as $key=>$value){
+            $brr[$key]['upload_status'] = $value['upload_status'];
+            $brr[$key]['upload_id'] = $value['upload_id'];
+            $brr[$key]['text'] = $value['text'];
+            $brr[$key]['user_id'] = $value['user_id'];
+            $brr[$key]['image'] = $value['image'];
+            $brr[$key]['file'] = $value['file'];
+            $brr[$key]['look'] = $value['look'];
+            $brr[$key]['images'] = $this->myFun($value['images']);
+            $brr[$key]['count'] = count($this->myFun($value['images']));
+        }
+//var_dump($brr);die;
+
+
           $data = Db::name('type')->select();
         $data2 = Db::table('fa_user_type')
             ->join('fa_type', 'fa_user_type.type_id=fa_type.type_id')
@@ -21,6 +47,7 @@ class Type extends Frontend
             ->select();
         $this->assign('type', $data);
         $this->assign('type2', $data2);
+        $this->assign('brr',$brr);
         return $this->view->fetch('type/index');
     }
 
@@ -39,7 +66,7 @@ class Type extends Frontend
     //首页分类添加
     public function addUsertype()
     {
-        $user_id = $_POST['user_id'];
+        $user_id=session("user_id");
         if (empty($user_id)) {
             $this->success(__('未登录'));
         } else {
@@ -181,13 +208,15 @@ class Type extends Frontend
             $type_id = $_POST['type_id'];
             $text = $_POST['text'];
             $content = $_POST['content'];
+            $createtime=time();
             $data = [
                 'user_id' => $user_id,
                 'file' => $file,
                 'text' => $text,
                 'content' => $content,
                 'upload_status' => 2,
-                'type_id' => $type_id
+                'type_id' => $type_id,
+                'createtime'=>$createtime
             ];
             $arr = DB::table('fa_upload')->insert($data);
             if ($arr) {
@@ -199,24 +228,33 @@ class Type extends Frontend
 
     }
 
-//首页视频图文文章展示
     public function myFun($pics){
-    //      $new_pics = rtrim($pics,',');
-      $arr = explode(',',$pics);
-      return $arr;
+        //      $new_pics = rtrim($pics,',');
+        $arr = explode(',',$pics);
+        return $arr;
     }
+//首页视频图文文章展示
     public function showUpload()
     {
-        $data = DB::table("fa_upload")
-            ->order(['look'=>'desc'])
-            ->limit(10)
-            ->select();
+        if(!empty($_POST['type_id'])){
+            $type_id=$_POST['type_id'];
+            $data = DB::table("fa_upload")
+                ->where(['type_id'=>$type_id])
+                ->select();
+        }else{
+            $data = DB::table("fa_upload")
+                ->order(['look'=>'desc'])
+                ->limit(4)
+                ->select();
+        }
         $brr = [];
         foreach($data as $key=>$value){
             $brr[$key]['upload_status'] = $value['upload_status'];
+            $brr[$key]['upload_id'] = $value['upload_id'];
             $brr[$key]['text'] = $value['text'];
             $brr[$key]['user_id'] = $value['user_id'];
             $brr[$key]['image'] = $value['image'];
+            $brr[$key]['file'] = $value['file'];
             $brr[$key]['look'] = $value['look'];
             $brr[$key]['images'] = $this->myFun($value['images']);
             $brr[$key]['count'] = count($this->myFun($value['images']));
@@ -227,59 +265,38 @@ class Type extends Frontend
        ];
         echo json_encode($arr);
     }
-//    文章详情页
-        public function textDetail()
-    {
-
-        return $this->view->fetch('type/textdetail');
-    }
 //    图文详情页
     public function imagetextDetail()
     {
+        $upload_id=$_GET['upload_id'];
+        $where=[
+            'upload_id'=>$upload_id,
+        ];
+        $arr=DB::table("fa_upload")
+            ->where($where)
+            ->find();
+        if($arr){
+            $where=[
+                'upload_id'=>$arr['upload_id']
+            ];
+            $res=DB::table("fa_upload")->where($where)->update(['look'=>$arr['look']+1]);
+        }
+        $arr['new_image'] = explode(',',$arr['images']);
+        $user_id=$arr['user_id'];
+        $res=DB::table("fa_userinfo")->where(['user_id'=>$user_id])->find();
 
+        $this->assign('arr', $arr);
+        $this->assign('res', $res);
         return $this->view->fetch('type/imagetextdetail');
     }
-    //图文详情页接口
-    public function showimagetextDetail(){
-        $image=$_POST['image'];
-        $text=$_POST['text'];
-        $user_id=$_POST['user_id'];
-        $upload_status=$_POST['upload_status'];
-        $where=[
-            'user_id'=>$user_id,
-            'text'=>$text,
-            'upload_status'=>$upload_status,
-            'image'=>$image,
-        ];
-        $arr=DB::table("fa_upload")
-            ->where($where)
-            ->find();
-        if($arr){
-            $where=[
-                'upload_id'=>$arr['upload_id']
-            ];
-            $res=DB::table("fa_upload")->where($where)->update(['look'=>$arr['look']+1]);
-        }
-        $arr=[
-            'code'=>1,
-            'msg'=>$arr,
-        ];
-        echo json_encode($arr);
-    }
     //文章详情页接口
-    public function showtextDetail(){
-        $images=$_POST['images'];
-        $user_id=$_POST['user_id'];
-        $text=$_POST['text'];
-        $upload_status=$_POST['upload_status'];
+    public function textDetail(){
+        $upload_id=$_GET['upload_id'];
         $where=[
-            'user_id'=>$user_id,
-            'text'=>$text,
-            'upload_status'=>$upload_status,
+            'upload_id'=>$upload_id,
         ];
         $arr=DB::table("fa_upload")
             ->where($where)
-            ->whereOr('images','like',"%{$images}%")
             ->find();
         if($arr){
             $where=[
@@ -287,11 +304,12 @@ class Type extends Frontend
             ];
             $res=DB::table("fa_upload")->where($where)->update(['look'=>$arr['look']+1]);
         }
-        $arr=[
-            'code'=>1,
-            'msg'=>$arr,
-        ];
-        echo json_encode($arr);
+        $user_id=$arr['user_id'];
+        $res=DB::table("fa_userinfo")->where(['user_id'=>$user_id])->find();
+
+        $this->assign('arr', $arr);
+        $this->assign('res', $res);
+        return $this->view->fetch('type/textdetail');
     }
 //    用户发布评论接口
     public function disscuss(){
@@ -411,12 +429,98 @@ class Type extends Frontend
             }
         }
     }
-//    个人中心用户信息修改
-    public function userinfoUpdate(){
-        
-}
-//    个人中心用户信息修改执行
-    public function userinfoUpdateDo(){
+    //    短视频页面
+    public function dsp(){
+        return $this->view->fetch('type/dsp');
+    }
+    //菜单栏影视数据展示
+    public function showVedio(){
+        $res=DB::table("fa_upload")->where(['upload_status'=>3])->order(['look'=>'desc'])->limit(15)->select();
+
+        if($res){
+            $arr=[
+                'code'=>1,
+                'msg'=>$res
+            ];
+            echo json_encode($arr);
+        }
 
     }
+
+//    个人中心用户信息修改
+    public function userinfoUpdate(){
+        $user_id=$_POST['user_id'];
+        $res=Db::table("fa_userinfo")->where(['user_id'=>$user_id])->find();
+        $arr=[
+            'code'=>1,
+            'msg'=>$res
+        ];
+        echo json_encode($arr);
+    }
+//    个人中心用户信息修改执行
+    public function userinfoUpdateDo(){
+        $user_mobile=session("user_mobile");
+        $where=['user_mobile'=>$user_mobile];
+        if(!empty($_POST['userID'])) {
+            $userID = $_POST['userID'];
+            $res = DB::table("fa_userinfo")->where($where)->update(['user_id' => $userID]);
+            if ($res) {
+                $this->success(__('修改ID成功'));
+            } else {
+                $this->error(__('修改ID失败'));
+            }
+        }else if(!empty($_POST['user_name'])){
+            $user_name=$_POST['user_name'];
+            $res=DB::table("fa_userinfo")->where($where)->update(['user_name'=>$user_name]);
+            if($res){
+                $this->success(__('修改昵称成功'));
+            }else{
+                $this->error(__('修改昵称失败'));
+            }
+        }else if(!empty($_POST['user_image'])){
+            $user_image=$_POST['user_image'];
+            $res=DB::table("fa_userinfo")->where($where)->update(['user_image'=>$user_image]);
+            if($res){
+                $this->success(__('修改头像成功'));
+            }else{
+                $this->error(__('修改头像失败'));
+            }
+        }else if(!empty($_POST['user_sex'])){
+            $user_sex=$_POST['user_sex'];
+            $res=DB::table("fa_userinfo")->where($where)->update(['user_sex'=>$user_sex]);
+            if($res){
+                $this->success(__('修改性别成功'));
+            }else{
+                $this->error(__('修改性别失败'));
+            }
+        }else if(!empty($_POST['user_address'])){
+            $user_address=$_POST['user_address'];
+            $res=DB::table("fa_userinfo")->where($where)->update(['user_address'=>$user_address]);
+            if($res){
+                $this->success(__('修改地址成功'));
+            }else{
+                $this->error(__('修改地址失败'));
+            }
+        }
+    }
+//视频播放详情页视频展示接口
+public function vedioDetail(){
+        $upload_id=$_GET['upload_id'];
+        $arr=DB::table("fa_upload")->where(['upload_id'=>$upload_id])->find();
+        $user_id=$arr['user_id'];
+        $res=DB::table("fa_userinfo")->where(['user_id'=>$user_id])->find();
+
+        $this->assign('arr', $arr);
+        $this->assign('res', $res);
+        return $this->view->fetch('type/vediodetail');
 }
+}
+//点击关注成为粉丝
+public function fans(){
+    $user_id=$_POST['user_id'];
+    $user_fans=
+    DB::table("userinfo")->where(['user_id'=>$user_id])->update(['user_fans'=>$user_fans+1]);
+}
+
+
+
